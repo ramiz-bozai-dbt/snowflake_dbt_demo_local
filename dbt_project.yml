@@ -1,0 +1,100 @@
+
+# Name your project! Project names should contain only lowercase characters
+# and underscores. A good package name should reflect your organization's
+# name or the intended use of these models
+name: 'ramiz_snowflake_github_demo'
+version: '1.0.0'
+config-version: 2
+
+# This setting configures which "profile" dbt uses for this project.
+profile: 'ramiz_snowflake_github_demo'
+
+# These configurations specify where dbt should look for different types of files.
+# The `source-paths` config, for example, states that models in this project can be
+# found in the "models/" directory. You probably won't need to change these!
+model-paths: ["models"]
+analysis-paths: ["analyses"]
+test-paths: ["tests"]
+seed-paths: ["seeds"]
+macro-paths: ["macros"]
+snapshot-paths: ["snapshots"]
+
+target-path: "target"  # directory which will store compiled SQL files
+clean-targets:         # directories to be removed by `dbt clean`
+    - "target"
+    - "dbt_modules"
+    - "dbt_packages"
+
+on-run-start:
+#  - "alter warehouse transforming set warehouse_size=small;"
+#  - '{{create_udfs()}}' # comment / uncomment this line to build UDFs called in the create_udfs macro
+#
+on-run-end:
+  - "{% if target.name == 'prod' %}{{ dbt_artifacts.upload_results(results) }}{% endif %}"
+#  - "alter warehouse transforming set warehouse_size=xsmall;"
+#  - "{{ grant_all_on_schemas(schemas, 'transformer') }}"
+
+vars:
+  start_date: '1999-01-01'
+  test: 'false' # to trigger runs for unit testing - override in a CLI param in testing job
+  fct_order_items: 'mock_source__fct_order_items' # this is a map for unit testing
+
+# Configuring models
+# Full documentation: https://docs.getdbt.com/docs/configuring-models
+
+models:
+  ramiz_snowflake_github_demo:
+    beginner_examples:
+      +materialized: table
+      +schema: beginner_examples
+
+    demo_examples:
+      +materialized: table
+      +schema: demo_examples
+
+    marts:
+      aggregates:
+        +materialized: table
+        +schema: marts
+      core:
+        +materialized: table
+        +schema: marts        
+      intermediate:
+        +materialized: table
+        +schema: marts 
+
+    sports:
+      +materialized: table
+      +schema: sports                           
+
+    staging:
+      account_usage:
+        +materialized: view
+        +schema: stg_account_usage            
+      jaffle_shop:
+        +materialized: view
+        +schema: stg_jaffle_shop 
+      mls:
+        +materialized: view  
+        +schema: stg_mls        
+        +tags: ['sports']          
+      nfl:
+        +materialized: view  
+        +schema: stg_nfl        
+        +tags: ['sports'] 
+      tpch:
+        +materialized: view   
+        +schema: stg_tpch        
+      weathersource:
+        +materialized: view      
+        +schema: stg_weathersource     
+
+  metrics:                          
+      +schema: metrics
+      
+seeds:
+  ramiz_snowflake_github_demo:
+    snowflake_contract_rates:
+      +column_types:
+        effective_date: DATE
+        rate: NUMBER   
