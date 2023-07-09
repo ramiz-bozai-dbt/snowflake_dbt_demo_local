@@ -1,0 +1,34 @@
+semantic_models:
+  - name: passing_stats
+    description: |
+    This table contains passing statistics for NFL players over the past 3 years. Each row represents one player/season.
+    model: ref('my_first_model')
+
+  entities:
+    - name: player_name
+      type: foreign
+      expr: player_name
+
+  measures:
+    - name: count_distinct_players
+      description: The number of distinct players.
+      agg: count_distinct
+      expr: player_name
+  
+  dimensions:
+    - name: position
+      type: categorical
+      expr: position
+    - name: team
+      type: categorical
+      expr: team
+    - name: season_year
+      type: time
+      expr: season_year  
+
+metrics:
+  - name: calculated_completion_rate
+    type: ratio
+    type_params:
+      numerator: attempts
+      denominator: completions                         
