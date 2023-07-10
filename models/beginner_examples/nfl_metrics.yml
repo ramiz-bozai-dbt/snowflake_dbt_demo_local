@@ -1,0 +1,35 @@
+semantic_models:
+  - name: passing_stats
+    description: Some statistics on NFL passing stats. Each record contains a single season for a player.
+    defaults:
+      agg_time_dimension: season_year
+    model: ref('my_first_model')
+
+    entities:
+      - name: player_name
+        type: foreign
+        expr: player_name
+
+    measures:
+      - name: count_distinct_players
+        description: Unique number of players.
+        expr: player_name
+        agg: count_distinct
+
+    dimensions:
+      - name: position
+        type: categorical
+        expr: position
+      - name: season_year
+        type: time
+        type_params:
+          time_granularity: year        
+
+
+metrics:
+  - name: calculated_dist_players
+    type: simple
+    type_params:
+      measure: count_distinct_players
+    label: "calcd_players"
+
