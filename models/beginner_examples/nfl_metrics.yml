@@ -4,17 +4,25 @@ semantic_models:
     defaults:
       agg_time_dimension: season_year
     model: ref('my_first_model')
+    primary_entity: player
 
     entities:
       - name: player_name
         type: foreign
         expr: player_name
+      - name: team
+        type: foreign
+        expr: team
 
     measures:
       - name: count_distinct_players
         description: Unique number of players.
         expr: player_name
         agg: count_distinct
+      - name: average_completion_rate
+        description: Average completion rate.
+        expr: completion_pct
+        agg: average       
 
     dimensions:
       - name: position
@@ -27,9 +35,15 @@ semantic_models:
 
 
 metrics:
-  - name: calculated_dist_players
+  - name: count_distinct_players
     type: simple
     type_params:
       measure: count_distinct_players
-    label: "calcd_players"
+    label: "Count distinct of players"
+  - name: average_completion_rate
+    type: simple
+    type_params:
+      measure: average_completion_rate
+    label: "Average completion rate for QBs"    
+
 
