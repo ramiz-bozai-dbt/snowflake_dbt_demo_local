@@ -1,0 +1,15 @@
+semantic_models:
+  - name: conference_mapping
+    description: Mapping for NFL teams and the conference they belong to.
+    defaults:
+    model: ref('conference_mapping')
+
+    entities:
+      - name: team
+        type: primary
+        expr: team
+
+    dimensions:
+      - name: conference
+        type: categorical
+        expr: conference        
